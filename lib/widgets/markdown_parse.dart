@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:markdown/markdown.dart' as md;
 import '../src/markdown_syntax.dart';
@@ -123,17 +123,17 @@ class MarkdownParse extends StatelessWidget {
       shrinkWrap: shrinkWrap,
       syntaxHighlighter: syntaxHighlighter,
       bulletBuilder: bulletBuilder ??
-          (int number, BulletStyle style) {
-            double? fontSize = Theme.of(context).textTheme.bodyMedium?.fontSize;
-            return Text(
+      (MarkdownBulletParameters parameters) => switch (parameters.style) {
+  BulletStyle.unorderedList => Text(
               "◉",
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.blue,
-                fontSize: (fontSize != null) ? fontSize + 2 : fontSize,
+                fontSize: Theme.of(context).textTheme.bodyMedium?.fontSize,
               ),
-            );
-          },
+            ),
+  BulletStyle.orderedList => Text('${parameters.index + 1}-$parameters.nestLevel.'),
+},   
       styleSheetTheme: styleSheetTheme,
       extensionSet: md.ExtensionSet(
         md.ExtensionSet.gitHubFlavored.blockSyntaxes,
